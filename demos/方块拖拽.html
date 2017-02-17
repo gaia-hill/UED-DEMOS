@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>拖拽div</title>
+		<style>
+			body{overflow: hidden;}
+			#dragDiv{width: 210px;height: 210px;background: #17BECF;position: absolute;}
+		</style>
+	</head>
+	<body>
+		<div id="dragDiv"></div>
+		
+		<script>
+		    var dragDiv=document.getElementById("dragDiv");
+			var disX=0;
+			var disY=0;
+			var prevX=0;
+			var prevY=0;
+			var dspeedX=0;
+			var dspeedY=0;
+			
+			dragDiv.style.width="0";
+			dragDiv.style.height="0";
+			dragDiv.style.left=document.documentElement.clientWidth/2+"px";
+			dragDiv.style.top=document.documentElement.clientHeight/2+"px";
+			
+			show(210);
+			function show(size){
+				var offsetX=dragDiv.offsetLeft;
+				var offsetY=dragDiv.offsetTop;
+				
+				var show_timer=setInterval(function(){
+					if(dragDiv.offsetWidth==size){
+						clearInterval(show_timer);
+						startJump();
+					}else{
+						dragDiv.style.width=dragDiv.offsetWidth+10+"px";
+						dragDiv.style.height=dragDiv.offsetHeight+10+"px";
+						dragDiv.style.left=offsetX-dragDiv.offsetWidth/2+"px";
+						dragDiv.style.top=offsetY-dragDiv.offsetHeight/2+"px";
+					}
+				},30);
+			}
+			
+			
+			dragDiv.onmousedown=function(e){
+				clearInterval(timer);
+//				e.preventDefault();   //不兼容低版本IE（8以下）
+				var e=e||window.event;
+				disX=e.clientX-dragDiv.offsetLeft;
+				disY=e.clientY-dragDiv.offsetTop;
+				
+				prevX=e.clientX; 
+				prevY=e.clientY;
+				
+				
+				if(dragDiv.setCapture){
+					dragDiv.setCapture();  //全局捕获（生成一个透明层）防止IE8选中文字后出现bug
+				}
+				
+				document.onmousemove=function(e){
+//					e.preventDefault();
+					var e=e||window.event;
+					dragDiv.style.left=e.clientX-disX+"px";
+					dragDiv.style.top=e.clientY-disY+"px";
+                    dspeedX=e.clientX-prevX;
+                    dspeedY=e.clientY-prevY;
+                    
+                    prevX=e.clientX;
+                    prevY=e.clientY;
+
+				}
+				
+				document.onmouseup=function(){
+//					e.preventDefault();
+					document.onmousemove=null;
+					document.onmouseup=null;
+					
+					startJump();
+					if(dragDiv.releaseCapture){
+						dragDiv.releaseCapture();  //释放全局捕获（取消透明层）
+					}
+				}
+				
+				return false;
+			}
+			
+
+			var timer=null;
+//			startJump();   //div跳跃逐渐停止
+			function startJump(){
+				clearInterval(timer);
+				timer=setInterval(function(){
+					
+					dspeedY+=2;
+					
+					var T=dragDiv.offsetTop+dspeedY;
+					var L=dragDiv.offsetLeft+dspeedX;
+					
+					if(T>document.documentElement.clientHeight-dragDiv.offsetHeight){
+						T=document.documentElement.clientHeight-dragDiv.offsetHeight;
+						dspeedY*=-1;
+						dspeedY*=0.75;
+						dspeedX*=0.75;
+					}else if(T<0){
+						T=0;
+						dspeedY*=-1;
+						dspeedY*=0.75;
+					}
+					
+					if(L>document.documentElement.clientWidth-dragDiv.offsetWidth){
+						L=document.documentElement.clientWidth-dragDiv.offsetWidth;
+						dspeedX*=-1;
+						dspeedX*=0.75;
+					}else if(L<0){
+						L=0;
+						dspeedX*=-1;
+						dspeedX*=0.75;
+					}
+					
+					dragDiv.style.left=L+"px";
+					dragDiv.style.top=T+"px";
+					
+				},15);
+			}
+			
+		</script>
+		
+	</body>
+</html>

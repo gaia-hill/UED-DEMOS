@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>sun1</title>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="1000" style="background: #000000;"></canvas>
+		<input placeholder="asd" />
+		<script>
+			var canvas=document.getElementById("canvas");
+			var cxt=canvas.getContext("2d");
+			drawTrack();
+			//轨道
+			function drawTrack(){
+				for(var i=0;i<8;i++){
+					cxt.strokeStyle="white";
+					cxt.beginPath();
+					cxt.arc(500,500,100+i*50,0,360,false);
+					cxt.closePath();
+					cxt.stroke();
+				}
+			}
+			//星球
+			function Star(x,y,radius,cycle,sColor,eColor){
+				this.x=x;
+				this.y=y; //圆心坐标
+				this.radius=radius; //半径
+				this.cycle=cycle;//公转周期
+				this.sColor=sColor; //渐变开始颜色
+				this.eColor=eColor;//渐变结束颜色
+				this.color=null;
+				this.time=0;
+				this.drawStar=function(){
+					cxt.save();
+					cxt.translate(500,500);
+					cxt.rotate(this.time*(360/cycle)*Math.PI/180);
+					cxt.beginPath();
+					cxt.arc(this.x,this.y,this.radius,0,360,false);
+					cxt.closePath();
+					this.color=cxt.createRadialGradient(this.x,this.y,0,this.x,this.y,this.radius);
+					this.color.addColorStop(0,this.sColor);
+					this.color.addColorStop(1,this.eColor);
+					cxt.fillStyle=this.color;
+					cxt.fill();
+					cxt.restore();
+					this.time+=1;
+				}
+			}
+			//创建太阳
+			function Sun(){
+				Star.call(this,0,0,60,0,"#f90","#ff0");
+			}
+		    //创建水星
+		    function Mercury(){
+				Star.call(this,0,-100,20,87.70,"#a69697","#5c3e40");
+			}
+		    //创建水星
+		    function Venus(){
+				Star.call(this,0,-150,20,224.701,"#c4bbac","#1f1315");
+			}
+		    //地球
+		    function Earth(){
+				Star.call(this,0,-200,20,365.224,"#78B1E8","#050C12");
+			}
+		    //火星
+		    function Mars(){
+				Star.call(this,0,-250,20,686.98,"#cec9b6","#76422d");
+			}
+		    //木星
+		    function Jupiter(){
+				Star.call(this,0,-300,20,4332.589,"#c0a48e","#322222");
+			}
+		    //土星
+		    function Saturn(){
+				Star.call(this,0,-350,20,10759.5,"#f7f9e3","#5c4533");
+			}
+		    //天王星
+		    function Uranus(){
+				Star.call(this,0,-400,20,30799.095,"#a7e1e5","#19243a");
+			}
+		    //海王星
+		    function Neptune(){
+				Star.call(this,0,-450,20,60152,"#0661b2","#1e3b73");
+			}
+		    
+		    //创建星球实例
+		    var sun=new Sun();
+		    var mer=new Mercury();
+		    var ven=new Venus();
+		    var ear=new Earth();
+		    var mar=new Mars();
+		    var jup=new Jupiter();
+		    var sat=new Saturn();
+		    var ura=new Uranus();
+		    var nep=new Neptune();
+		    
+		    //调用绘制函数
+
+				function drawR() {
+					cxt.clearRect(0, 0, 1000, 1000);
+					drawTrack();
+					sun.drawStar();
+					mer.drawStar();
+					ven.drawStar();
+					ear.drawStar();
+					mar.drawStar();
+					jup.drawStar();
+					sat.drawStar();
+					ura.drawStar();
+					nep.drawStar();
+				}
+		    //使星球运动
+		    setInterval(drawR,10);
+		</script>
+	</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>瀑布流</title>
+		<script type="text/javascript" src="../js/jquery-1.11.1.min.js" ></script>
+	    <style>
+	    	*{margin: 0;padding: 0;}
+	    	#imgContainer{position: relative;width: 1000px;margin: 50px auto 0;}
+	    	#imgContainer img{position: absolute;}
+	    </style>
+	</head>
+	<body>
+		<div id="imgContainer"></div>
+		<script>
+			var iwidth=200;
+			var ispace=10;
+			var iurl='http://www.wookmark.com/api/json/popular?callback=?';
+			var icells;
+			setCells();
+			$("#imgContainer").css("width",(iwidth+ispace)*icells-ispace);
+			
+			function setCells(){
+				icells=Math.floor($(window).innerWidth()/(iwidth+ispace));
+			}
+			
+			var arrL=[];
+			var arrT=[];
+			for(var i=0;i<icells;i++){
+				arrL.push(i*(iwidth+ispace));
+				arrT.push(0);
+			}
+			
+			var ipage=0;
+			var iflag=true;
+			loadData();
+			
+			function loadData(){
+				if(iflag){
+					iflag=false;
+					$.getJSON(iurl,'page='+ipage,function(data){
+						$.each(data, function(index,obj) {    
+							var iimg=$('<img />');
+							iimg.attr("src",obj.preview);
+							$("#imgContainer").append(iimg);
+							
+							var iheight=iwidth/obj.width*obj.height;
+							
+							var iminIndex=getMin();
+							
+							iimg.css({
+								left:arrL[iminIndex],
+								top:arrT[iminIndex],
+								width:iwidth,
+								height:iheight,
+							});
+							
+							arrT[iminIndex]+=iimg.height()+10;
+						});
+					});
+					iflag=true;
+				}
+			}
+			
+			$(window).on("scroll",function(){
+				var ih=$(window).scrollTop()+$(window).innerHeight();
+				var iminIndex=getMin();
+				if(arrT[iminIndex]+$("#imgContainer").offset().top<ih){
+					ipage++;
+					loadData();
+				}
+			});
+			
+			$(window).on("resize",function(){
+				
+				var ioldcells=icells;
+				
+				setCells();
+				
+				if(ioldcells==icells){
+					return;
+				}
+				
+				arrL=[];
+				arrT=[];
+				for(var i=0;i<icells;i++){
+					arrL.push(i*(iwidth+ispace));
+					arrT.push(0);
+				}
+				var iimgs=$("#imgContainer").find("img");
+				iimgs.each(function(){
+					var iminIndex=getMin();
+					$(this).animate({
+						left:arrL[iminIndex],
+						top:arrT[iminIndex],
+					});
+					arrT[iminIndex]+=$(this).height()+10;
+				});
+				
+			});
+			
+			
+			function getMin(){
+				var iv=arrT[0];
+				var inx=0;
+				for(var i=0;i<arrT.length;i++){
+					if(iv>arrT[i]){
+						iv=arrT[i];
+						inx=i;
+					}
+				}
+				return inx;
+			}
+		</script>
+	</body>
+</html>

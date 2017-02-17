@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>HTML5演示</title>
+		<meta charset="UTF-8"/>
+		<style>
+			/**{border: 1px solid red;height: 20px}*/
+			header{height: 150px;background: #ABCDEF}
+			nav{height: 30px;background: #FF9900;margin-top: 100px}
+			nav ul li{width: 100px;height: 30px;float: left;line-height: 30px}
+			div{margin-top: 10px;height: 700px}
+			section{height: 700px;background: #ABCDEF;width: 70%;float: left}
+			article{width: 400px;}
+			aside{height: 700px;background: #ABCDEF;width: 28%;float: right}
+			footer{height: 100px;background: #ABCDEF;margin-top: 10px;clear: both}
+		</style>
+		
+	</head>
+	<body>
+		<header>
+			<p>Header</p>
+			<nav>
+				<ul>
+					<li>首页</li>
+					<li>国内</li>
+					<li>国际</li>
+					<li>互联网</li>
+				</ul>
+			</nav>
+		</header>
+		<div>
+			<section>
+				<p>Section</p>
+				<article>
+					<h2>春晓</h2>
+					<p>春眠不觉晓，<br/>
+					        处处闻啼鸟。<br/>
+					        夜来风雨声，<br/>
+					        花落知多少。</p>
+				</article>
+				<hr />
+				<figure>
+					<figcaption>UFO</figcaption>
+					<p>不明飞行物</p>
+				</figure>
+				<hr />
+				<dialog>
+					<dt>Q:What is this?</dt>
+					<dd>A:It is apple.</dd>
+					<dt>Q:What about that?</dt>
+					<dd>A:Banana</dd>
+				</dialog>
+				<menu>
+					<li>点击</li>
+					<li>右键点击</li>
+				</menu>
+				<hr />
+				<span contextmenu="caidan">右键</span>
+				<!--只有火狐支持-->
+				<menu type="context" id="caidan">
+					<menuitem label="菜单一" onclick="alert('菜单一')" icon="http://www.baidu.com/img/bdlogo.gif"></menuitem>
+				</menu>
+				<hr />
+				<meter min="0" max="10" value="5" low="3" high="7"></meter>
+				<progress max="100" value="0" id="pro"></progress>
+				<script>
+					var pro = document.getElementById('pro');
+					setInterval(function() {
+						pro.value += 1;
+					}, 100);
+				</script>
+				<hr />
+				<details>
+					<dt>问题</dt>
+					<dd>这是什么？</dd>
+				</details>
+				<hr />
+				<ruby>夼<rt>kuang</rt></ruby>
+				<hr />
+				这是一句话，提醒<mark>显示这句话</mark>
+			</section>
+			<aside>
+				<p>Aside</p>
+				<hgroup>
+					<h3>解密</h3>
+					<h3>探索</h3>
+					<h3>公布</h3>
+				</hgroup>
+			</aside>
+		</div>
+		<footer>
+			<p>Footer</p>
+			<hr />
+			<small>联系我们</small>
+			<small>法律依据</small>
+			<small>联系电话</small>
+		</footer>
+	</body>
+</html>

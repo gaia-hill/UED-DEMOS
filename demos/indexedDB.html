@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>indexedDB</title>
+	</head>
+	<body>
+	    <input type="button" value="添加" onclick="addData();" />
+	    <input type="button" value="获取" onclick="getData();" />
+	    <input type="button" value="删除" onclick="deletaDatabase();" />
+	    <input type="button" value="修改" onclick="modifyData();" />
+		<script>
+			
+            
+            var db;
+            var request;
+            
+            init();
+            function init(){
+            	window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+            	if(!window.indexedDB)
+				{
+				    console.log("你的浏览器不支持IndexedDB");
+				}else{
+					console.log("你的浏览器支持IndexedDB");
+				}
+				
+				request = window.indexedDB.open("testDB", 3);
+				
+				request.onerror = function(event){
+				    console.log("打开DB失败", event);
+				}
+				request.onupgradeneeded   = function(event){
+				    console.log("Upgrading");
+				    db = event.target.result;
+				    db.createObjectStore("students", { keyPath : "id" });
+				};
+				request.onsuccess  = function(event){
+				    console.log("成功打开DB");
+				    db = event.target.result;
+//				    db.createObjectStore("students", { keyPath : "id" });
+				}
+            }
+			
+			var students=[{id:1001,name:"Byron",age:24},{id:1002,name:"Frank",age:30},{id:1003,name:"Aaron",age:26}];
+			
+			function addData(){
+				var transaction = db.transaction(["students"], "readwrite");
+				transaction.oncomplete=function(){
+					console.log("添加已完成");
+				}
+				
+				var objectStore = transaction.objectStore("students");
+				console.log(objectStore);
+//				var s = objectStore.add(students[0]);
+//				objectStore.add(students[1]);
+//				s.onsuccess=function(event){
+//					console.log("添加数据成功");
+//				}
+			}
+			
+			function getData(){
+				var transaction = db.transaction(["students"], "readwrite");
+				transaction.oncomplete=function(){
+					console.log("获取数据已完成");
+				}
+				
+				var objectStore = transaction.objectStore("students");
+				var s = objectStore.get(1002);
+				s.onsuccess=function(event){
+					console.log("获取数据成功");
+					alert("Name for id 1002 is " + s.result.name);
+				}
+			}
+			
+			function modifyData(){
+				var transaction = db.transaction(["students"], "readwrite");
+				transaction.oncomplete=function(){
+					console.log("修改数据已完成");
+				}
+				
+				var objectStore = transaction.objectStore("students");
+				var s = objectStore.get(1002);
+				s.onsuccess=function(event){
+					console.log("修改数据成功");
+					s.result.name="modifyName";
+					objectStore.put(s.result);
+				}
+			}
+			
+			function deletaDatabase(){
+				var transaction = db.transaction(["students"], "readwrite");
+				var objectStore = transaction.objectStore("students");
+//				var s = objectStore.delete();    //要删除的项的id
+//				s.onsuccess=function(event){
+//					console.log(s.result);
+//				}
+			}
+		</script>
+	</body>
+</html>
