@@ -6,19 +6,21 @@
 	</head>
 	<body>
 		<div style="width: 300px;height: 300px;border: 1px solid #000000;overflow: auto;">
+			<p>循环append</p>
+			<input type="button" value="添加" onclick="addListNode1();" />
 			<ul id="list1"></ul>
-			<input type="button" value="添加" onclick="addListOne();" />
 		</div>
 		
-		<div style="width:calc(100% - 100px);height: 300px;border: 1px solid #000000;overflow: auto;">
+		<div style="width:300px;height: 300px;border: 1px solid #000000;overflow: auto;">
+			<p>fragment</p>
+			<input type="button" value="添加" onclick="addListNode2();" />
 			<ul id="list2"></ul>
-			<input type="button" value="添加" onclick="addListTwo();" />
 		</div>
 		
 		<script>
-			function addListOne(){
+			function addListNode1(){
 				console.time("list1");
-				for(var i=0;i<10000;i++){
+				for(var i=0;i<20000;i++){
 					var li=document.createElement("li");
 					li.innerHTML="item"+i;
 					document.getElementById("list1").appendChild(li);
@@ -26,10 +28,10 @@
 				console.timeEnd("list1");
 			}
 			
-			function addListTwo(){
+			function addListNode2(){
 				console.time("list2");
 				var frag=document.createDocumentFragment();
-				for(var i=0;i<10000;i++){
+				for(var i=0;i<20000;i++){
 					var li=document.createElement("li");
 					li.innerHTML="item"+i;
 					frag.appendChild(li);
